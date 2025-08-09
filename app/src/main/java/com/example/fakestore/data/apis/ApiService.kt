@@ -8,7 +8,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("/products")
+    @GET("products")
     suspend fun getProducts(
         @Query("offset")
         offset: Int,
@@ -16,12 +16,12 @@ interface ApiService {
         limit: Int,
     ): Response<List<Product>>
 
-    @GET("/products/{id}")
+    @GET("products/{id}")
     suspend fun getProduct(@Path("id") id: String): Response<Product>
 
-    @GET("/categories")
+    @GET("categories")
     suspend fun getCategories(): Response<List<Category>>
 
-    @GET("/categories/{id}/products")
-    suspend fun getProductsByCategory(@Path("id") id: String): Response<List<Product>>
+    @GET("categories/{id}/products")
+    suspend fun getProductsByCategory(@Path("id") id: Int): Response<List<Product>>
 }

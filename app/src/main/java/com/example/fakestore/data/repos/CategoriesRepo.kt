@@ -12,6 +12,6 @@ import retrofit2.HttpException
 class CategoriesRepo(val service: ApiService) {
     fun getCategories(): Flow<State<List<Category>>> = callApiWithRetry { service.getCategories() }
 
-    fun getProductsByCategory(id: String): Flow<State<List<Product>>> =
+    fun getProductsByCategory(id: Int): Flow<State<List<Product>>> =
         callApiWithRetry { service.getProductsByCategory(id) }
 }
