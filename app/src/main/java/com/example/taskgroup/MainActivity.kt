@@ -24,11 +24,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                ProductListScreen(viewModel.products.collectAsState().value)
             }
         }
     }
-}
 
 @Composable
 fun ProductListScreen(products: List<Product>) {
