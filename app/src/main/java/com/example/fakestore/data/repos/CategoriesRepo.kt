@@ -4,35 +4,14 @@ import com.example.fakestore.data.apis.ApiService
 import com.example.fakestore.data.models.Category
 import com.example.fakestore.data.models.Product
 import com.example.fakestore.utils.State
+import com.example.fakestore.utils.callApiWithRetry
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import retrofit2.HttpException
 
 class CategoriesRepo(val service: ApiService) {
-    fun getCategories(): Flow<State<List<Category>>> = flow {
-        emit(State.Loading)
-        try {
-            val response = service.getCategories()
-            emit(State.Success(response.body()!!))
-        } catch (e: Exception) {
-            emit(
-                State.Error(
-                    e.localizedMessage
-                )
-            )
-        }
-    }
+    fun getCategories(): Flow<State<List<Category>>> = callApiWithRetry { service.getCategories() }
 
-    fun getProductsByCategory(id: String): Flow<State<List<Product>>> = flow {
-        emit(State.Loading)
-        try {
-            val response = service.getProductsByCategory(id)
-            emit(State.Success(response.body()!!))
-        } catch (e: Exception) {
-            emit(
-                State.Error(
-                    e.localizedMessage
-                )
-            )
-        }
-    }
+    fun getProductsByCategory(id: String): Flow<State<List<Product>>> =
+        callApiWithRetry { service.getProductsByCategory(id) }
 }

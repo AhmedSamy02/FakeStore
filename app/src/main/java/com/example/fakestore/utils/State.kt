@@ -9,6 +9,5 @@ sealed class State<out T> {
             if (message == null)
                 message = "Unexpected Error please contact service provider"
         }
-
     }
 }
