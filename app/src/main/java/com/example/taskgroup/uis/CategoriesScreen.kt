@@ -8,15 +8,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
@@ -26,32 +22,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
-import com.example.taskgroup.R
 import com.example.taskgroup.data.models.Category
+import com.example.taskgroup.utils.ErrorView
+import com.example.taskgroup.utils.LoadingView
+import com.example.taskgroup.utils.Screen
 import com.example.taskgroup.viewmodels.CategoriesViewModel
 import com.example.taskgroup.utils.State
+import com.example.taskgroup.viewmodels.ProductsByCategoriesViewModel
 
 
 @Composable
-fun CategoriesScreen() {
+fun CategoriesScreen(navController: NavHostController) {
     val viewModel: CategoriesViewModel = viewModel()
     val state = viewModel.categoriesState.collectAsState()
     when (val res = state.value) {
-        is State.Error -> CategoriesErrorView(res.message, viewModel)
-        State.Loading -> CategoriesLoadingView()
-        is State.Success<List<Category>> -> CategoriesSuccessView(res.data)
+        is State.Error -> ErrorView(res.message) {
+            viewModel.getCategories()
+        }
+        State.Loading -> LoadingView()
+        is State.Success<List<Category>> -> {
+            CategoriesSuccessView(res.data, navController)
+        }
     }
 }
 
 @Composable
-fun CategoriesItem(category: Category) {
+fun CategoriesItem(
+    category: Category,
+    navController: NavHostController,
+) {
     OutlinedCard(
         modifier = Modifier
             .fillMaxSize()
@@ -60,9 +66,10 @@ fun CategoriesItem(category: Category) {
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface,
         ),
-        border = BorderStroke(1.dp, Color.Green),
+        border = BorderStroke(1.dp, Color.Black),
         onClick = {
-            TODO("Add Navigation to products by details")
+            navController.currentBackStackEntry?.savedStateHandle?.set("id", category.id)
+            navController.navigate(Screen.ProductByCategory.route)
         }
     ) {
         Column(
@@ -76,8 +83,8 @@ fun CategoriesItem(category: Category) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp),
-                onError = {e->
-                    Log.e("FakeStoreApp","e = $e")
+                onError = { e ->
+                    Log.e("FakeStoreApp", "e = $e")
                 }
             )
             Text(
@@ -94,74 +101,15 @@ fun CategoriesItem(category: Category) {
     }
 }
 
-@Composable
-fun CategoriesLoadingView() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        CircularProgressIndicator(
-            color = Color.Black, modifier = Modifier.size(36.dp)
-        )
-        Text(
-            text = "Loading...",
-            modifier = Modifier.padding(top = 24.dp),
-            fontSize = 36.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-        Text(
-            text = "Please wait while your data is loading",
-            modifier = Modifier.padding(top = 16.dp),
-            fontSize = 18.sp
-        )
-    }
-}
 
 @Composable
-fun CategoriesErrorView(message: String?, viewModel: CategoriesViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(24.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.baseline_error_outline_24),
-            contentDescription = "Error",
-            tint = Color.Red
-        )
-        Text(
-            text = "Error occurred",
-            modifier = Modifier.padding(top = 24.dp),
-            fontSize = 36.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-        Text(
-            text = message ?: "Unknown Error",
-            modifier = Modifier.padding(top = 16.dp),
-            fontSize = 18.sp
-        )
-        Button(
-            modifier = Modifier.padding(top = 16.dp),
-            onClick = {
-                viewModel.getCategories()
-            }) {
-            Text("Retry")
-        }
-    }
-}
-
-@Composable
-fun CategoriesSuccessView(categories: List<Category>) {
+fun CategoriesSuccessView(
+    categories: List<Category>,
+    navController: NavHostController,
+) {
     LazyVerticalGrid(GridCells.Fixed(2)) {
         items(categories) { category ->
-            CategoriesItem(category)
+            CategoriesItem(category, navController)
         }
     }
 }
