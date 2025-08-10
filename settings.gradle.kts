@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "TaskGroup"
+rootProject.name = "FakeStore"
 include(":app")
  
