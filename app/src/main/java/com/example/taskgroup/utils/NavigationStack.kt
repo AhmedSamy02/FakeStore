@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.taskgroup.Cart
+import com.example.taskgroup.uis.Cart
 import com.example.taskgroup.uis.CategoriesScreen
 import com.example.taskgroup.uis.ProductDetailsScreen
 import com.example.taskgroup.uis.ProductListScreen

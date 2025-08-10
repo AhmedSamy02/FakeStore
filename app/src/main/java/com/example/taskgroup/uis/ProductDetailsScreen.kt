@@ -185,7 +185,7 @@ private fun ProductContent(
                             .size(300.dp, 250.dp)
                             .clip(RoundedCornerShape(12.dp)),
                         contentScale = ContentScale.Crop,
-                        placeholder = painterResource(R.drawable.shoppingbag),
+                        placeholder = painterResource(R.drawable.photo),
                         error = painterResource(R.drawable.baseline_error_outline_24)
                     )
                 }
