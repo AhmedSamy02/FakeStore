@@ -1,4 +1,4 @@
-package com.example.fakestore.data.models
+package com.example.taskgroup.data.models
 
 
 import com.google.gson.annotations.SerializedName

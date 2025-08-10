@@ -1,7 +1,7 @@
-package com.example.fakestore.data.apis
+package com.example.taskgroup.data.apis
 
-import com.example.fakestore.data.models.Category
-import com.example.fakestore.data.models.Product
+import com.example.taskgroup.data.models.Category
+import com.example.taskgroup.data.models.Product
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

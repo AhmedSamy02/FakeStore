@@ -1,12 +1,12 @@
-package com.example.fakestore.viewmodels
+package com.example.taskgroup.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fakestore.data.apis.RetrofitInstance
-import com.example.fakestore.data.models.Category
-import com.example.fakestore.data.models.Product
-import com.example.fakestore.data.repos.CategoriesRepo
-import com.example.fakestore.utils.State
+import com.example.taskgroup.data.apis.RetrofitInstance
+import com.example.taskgroup.data.models.Category
+import com.example.taskgroup.data.models.Product
+import com.example.taskgroup.data.repos.CategoriesRepo
+import com.example.taskgroup.utils.State
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 

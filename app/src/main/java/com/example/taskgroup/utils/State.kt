@@ -1,4 +1,4 @@
-package com.example.fakestore.utils
+package com.example.taskgroup.utils
 
 sealed class State<out T> {
     data object Loading : State<Nothing>()

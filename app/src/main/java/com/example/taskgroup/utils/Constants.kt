@@ -1,12 +1,9 @@
-package com.example.fakestore.utils
+package com.example.taskgroup.utils
 
-import android.util.Log
-import com.example.fakestore.data.models.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import retrofit2.Response
-import retrofit2.Retrofit
 import java.util.concurrent.TimeoutException
 
 const val NUM_TRIES = 3

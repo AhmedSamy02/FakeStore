@@ -1,4 +1,4 @@
-package com.example.fakestore.data.apis
+package com.example.taskgroup.data.apis
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.taskgroup.Room.CartProduct
-import com.example.taskgroup.data.Product
 import com.example.taskgroup.ui.theme.btnColor
 import com.example.taskgroup.ui.theme.offWhite
 
