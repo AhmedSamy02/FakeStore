@@ -1,7 +1,5 @@
 package com.example.taskgroup.uis
 
-
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -23,19 +21,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.example.fakestore.R
 import com.example.taskgroup.viewmodels.ProductDetailsViewModel
+import com.example.taskgroup.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductDetailsScreen(
-    productId: String,
-    onNavigateBack: () -> Unit,
-    viewModel: ProductDetailsViewModel = viewModel()
-) {
+fun ProductDetailsScreen(navController: NavHostController) {
+    val productId =
+        navController.previousBackStackEntry?.savedStateHandle?.get<Int>("id")!!.toString()
+    val viewModel: ProductDetailsViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -65,7 +63,9 @@ fun ProductDetailsScreen(
             TopAppBar(
                 title = { Text("Product Details") },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back"
@@ -85,12 +85,14 @@ fun ProductDetailsScreen(
                 uiState.isLoading -> {
                     LoadingContent()
                 }
+
                 uiState.product != null -> {
                     ProductContent(
                         product = uiState.product!!,
                         onAddToCart = { viewModel.addToCart(uiState.product!!) }
                     )
                 }
+
                 uiState.error != null -> {
                     ErrorContent(
                         error = uiState.error!!,
@@ -157,7 +159,7 @@ private fun ErrorContent(
 
 @Composable
 private fun ProductContent(
-    product:com.example.taskgroup.data.models.Product,
+    product: com.example.taskgroup.data.models.Product,
     onAddToCart: () -> Unit
 ) {
     Column(

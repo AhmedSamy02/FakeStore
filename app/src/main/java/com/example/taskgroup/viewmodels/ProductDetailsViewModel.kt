@@ -3,7 +3,10 @@ package com.example.taskgroup.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.taskgroup.data.apis.ApiService
+import com.example.taskgroup.data.apis.RetrofitInstance
 import com.example.taskgroup.data.models.Product
+import com.example.taskgroup.data.repos.CategoriesRepo
 import com.example.taskgroup.data.repos.ProductRepo
 import com.example.taskgroup.utils.State
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,9 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProductDetailsViewModel(
-    private val productRepo: ProductRepo
 ) : ViewModel() {
-
+    private val productRepo: ProductRepo = ProductRepo(RetrofitInstance.getInstance())
     private val _uiState = MutableStateFlow(ProductDetailsUiState())
     val uiState: StateFlow<ProductDetailsUiState> = _uiState.asStateFlow()
 
