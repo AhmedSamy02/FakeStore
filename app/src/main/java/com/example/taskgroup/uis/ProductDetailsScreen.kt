@@ -27,13 +27,26 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.taskgroup.viewmodels.ProductDetailsViewModel
 import com.example.taskgroup.R
+import com.example.taskgroup.Room.CartRepo
+import com.example.taskgroup.Room.FakeStoreDatabase
+import com.example.taskgroup.data.apis.RetrofitInstance
+import com.example.taskgroup.data.repos.ProductRepo
+import com.example.taskgroup.viewmodels.ProductDetailsViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailsScreen(navController: NavHostController) {
     val productId =
         navController.previousBackStackEntry?.savedStateHandle?.get<Int>("id")!!.toString()
-    val viewModel: ProductDetailsViewModel = viewModel()
+    val context = LocalContext.current
+    val db = FakeStoreDatabase.getDatabase(context)
+    val productRepo = ProductRepo(RetrofitInstance.getInstance())
+
+    val viewModel: ProductDetailsViewModel = viewModel(
+        factory = ProductDetailsViewModelFactory(productRepo, db.dao())
+    )
+
+
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 

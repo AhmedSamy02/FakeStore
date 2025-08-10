@@ -3,6 +3,9 @@ package com.example.taskgroup.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.taskgroup.Room.CartProduct
+import com.example.taskgroup.Room.CartRepo
+import com.example.taskgroup.Room.DAO
 import com.example.taskgroup.data.apis.ApiService
 import com.example.taskgroup.data.apis.RetrofitInstance
 import com.example.taskgroup.data.models.Product
@@ -15,8 +18,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProductDetailsViewModel(
+    private val productRepo: ProductRepo,
+    private val dao: DAO
 ) : ViewModel() {
-    private val productRepo: ProductRepo = ProductRepo(RetrofitInstance.getInstance())
+
     private val _uiState = MutableStateFlow(ProductDetailsUiState())
     val uiState: StateFlow<ProductDetailsUiState> = _uiState.asStateFlow()
 
@@ -24,50 +29,39 @@ class ProductDetailsViewModel(
         viewModelScope.launch {
             productRepo.getProduct(productId).collect { state ->
                 when (state) {
-                    is State.Loading -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = true,
-                            error = null
-                        )
-                    }
-                    is State.Success -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            product = state.data,
-                            error = null
-                        )
-                    }
-                    is State.Error -> {
-                        _uiState.value = _uiState.value.copy(
-                            isLoading = false,
-                            error = state.message
-                        )
-                    }
+                    is State.Loading -> _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+                    is State.Success -> _uiState.value = _uiState.value.copy(isLoading = false, product = state.data, error = null)
+                    is State.Error -> _uiState.value = _uiState.value.copy(isLoading = false, error = state.message)
                 }
             }
         }
     }
 
     fun addToCart(product: Product) {
-        // TODO: Implement cart functionality
-
-        _uiState.value = _uiState.value.copy(
-            showAddedToCartMessage = true
-        )
+        viewModelScope.launch {
+            val cartProduct = CartProduct(
+                id = product.id,
+                title = product.title,
+                price = product.price.toDouble(),
+                description = product.description,
+                category = product.category.name, // or however you store it
+                image = product.images.firstOrNull() ?: "",
+                quantity = 1
+            )
+            dao.upsertProduct(cartProduct)
+            _uiState.value = _uiState.value.copy(showAddedToCartMessage = true)
+        }
     }
 
     fun clearAddedToCartMessage() {
-        _uiState.value = _uiState.value.copy(
-            showAddedToCartMessage = false
-        )
+        _uiState.value = _uiState.value.copy(showAddedToCartMessage = false)
     }
 
     fun clearError() {
-        _uiState.value = _uiState.value.copy(
-            error = null
-        )
+        _uiState.value = _uiState.value.copy(error = null)
     }
 }
+
 
 data class ProductDetailsUiState(
     val isLoading: Boolean = false,
